@@ -160,58 +160,55 @@ int main() {
 
 	NeuralNetwork net({ 3, 5, 1 });
 
-	// training
-	{
-		int iterations = 50000, progressStep = iterations / 50;
 
-		std::cout << "started training for " << iterations << " iterations" << std::endl;
+	int iterations = 50000, progressStep = iterations / 50;
 
-		auto train = [&](std::vector<float> inputs, std::vector<float> expected) {
-			net.feedForward(inputs); net.backProp(expected);
-		};
+	std::cout << "started training for " << iterations << " iterations" << std::endl;
 
-#if STATS
-		std::ofstream file; file.open("error.csv");
-#endif
-
-		for (int i = 0; i < iterations + 1; i++) if (!(i % progressStep)) std::cout << '#'; std::cout << "<\n";
-		for (int i = 0; i < iterations + 1; i++) {
-			train({ 0, 0, 1 }, { 0 });
-			train({ 0, 1, 0 }, { 0 });
-			train({ 0, 1, 1 }, { 0 });
-			train({ 1, 0, 0 }, { 1 });
-			train({ 1, 0, 1 }, { 0 });
-			train({ 1, 1, 0 }, { 1 });
-			train({ 1, 1, 1 }, { 1 });
-			if (!(i % progressStep)) std::cout << "#";
-#if STATS
-			if (!(i % 100)) file << i
-				<< ',' << abs(0 - net.feedForward({ 0, 0, 1 })[0])
-				<< ',' << abs(0 - net.feedForward({ 0, 1, 0 })[0])
-				<< ',' << abs(0 - net.feedForward({ 0, 1, 1 })[0])
-				<< ',' << abs(1 - net.feedForward({ 1, 0, 0 })[0])
-				<< ',' << abs(0 - net.feedForward({ 1, 0, 1 })[0])
-				<< ',' << abs(1 - net.feedForward({ 1, 1, 0 })[0])
-				<< ',' << abs(1 - net.feedForward({ 1, 1, 1 })[0]) << '\n';
-#endif
-		}
+	auto train = [&](std::vector<float> inputs, std::vector<float> expected) {
+		net.feedForward(inputs); net.backProp(expected);
+	};
 
 #if STATS
-		file.close();
+	std::ofstream values; values.open("values.csv");
 #endif
 
-		std::cout << "<\ntraining finished\n";
+	for (int i = 0; i < iterations + 1; i++) if (!(i % progressStep)) std::cout << '#'; std::cout << "<\n";
+	for (int i = 0; i < iterations + 1; i++) {
+		train({ 0, 0, 1 }, { 0 });
+		train({ 0, 1, 0 }, { 0 });
+		train({ 0, 1, 1 }, { 0 });
+		train({ 1, 0, 0 }, { 1 });
+		train({ 1, 0, 1 }, { 0 });
+		train({ 1, 1, 0 }, { 1 });
+		train({ 1, 1, 1 }, { 1 });
+		if (!(i % progressStep)) std::cout << "#";
+#if STATS
+		if (!(i % progressStep)) values << i
+			<< ',' << net.feedForward({ 0, 0, 1 })[0]
+			<< ',' << net.feedForward({ 0, 1, 0 })[0]
+			<< ',' << net.feedForward({ 0, 1, 1 })[0]
+			<< ',' << net.feedForward({ 1, 0, 0 })[0]
+			<< ',' << net.feedForward({ 1, 0, 1 })[0]
+			<< ',' << net.feedForward({ 1, 1, 0 })[0]
+			<< ',' << net.feedForward({ 1, 1, 1 })[0] << '\n';
+#endif
 	}
 
-	const char* stateFilename = "state.txt";
-	
+#if STATS
+	values.close();
+#endif
+
+	std::cout << "<\ntraining finished\n";
+
+	/*const char* stateFilename = "state.txt";	
 	std::ofstream state; state.open(stateFilename);
 	state << net; std::cout << "NN state saved as: " << stateFilename << '\n';
-	state.close();
+	state.close();*/
 
-	std::ifstream _state(stateFilename);
+	/*std::ifstream _state(stateFilename);
 	NeuralNetwork net_recovered({ 3, 5, 1 }, _state);
-	_state.close();
+	_state.close();*/
 
 	std::cout << "\n\n\n\n\n";
 

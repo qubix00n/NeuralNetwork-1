@@ -210,7 +210,7 @@ int main() {
 	NeuralNetwork net_recovered({ 3, 5, 1 }, _state);
 	_state.close();*/
 
-	std::cout << "\n\n\n\n\n";
+	std::cout << "\n\n";
 
 	return 177013;
 }

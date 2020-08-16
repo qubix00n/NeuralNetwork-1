@@ -161,7 +161,7 @@ int main() {
 	NeuralNetwork net({ 3, 5, 1 });
 
 
-	int iterations = 50000, progressStep = iterations / 50;
+	int iterations = 5000, progressStep = iterations / 50;
 
 	std::cout << "started training for " << iterations << " iterations" << std::endl;
 
@@ -175,12 +175,12 @@ int main() {
 
 	for (int i = 0; i < iterations + 1; i++) if (!(i % progressStep)) std::cout << '#'; std::cout << "<\n";
 	for (int i = 0; i < iterations + 1; i++) {
-		train({ 0, 0, 1 }, { 0 });
+		train({ 0, 0, 1 }, { 1 });
 		train({ 0, 1, 0 }, { 0 });
-		train({ 0, 1, 1 }, { 0 });
-		train({ 1, 0, 0 }, { 1 });
-		train({ 1, 0, 1 }, { 0 });
-		train({ 1, 1, 0 }, { 1 });
+		train({ 0, 1, 1 }, { 1 });
+		train({ 1, 0, 0 }, { 0 });
+		train({ 1, 0, 1 }, { 1 });
+		train({ 1, 1, 0 }, { 0 });
 		train({ 1, 1, 1 }, { 1 });
 		if (!(i % progressStep)) std::cout << "#";
 #if STATS
@@ -191,7 +191,8 @@ int main() {
 			<< ',' << net.feedForward({ 1, 0, 0 })[0]
 			<< ',' << net.feedForward({ 1, 0, 1 })[0]
 			<< ',' << net.feedForward({ 1, 1, 0 })[0]
-			<< ',' << net.feedForward({ 1, 1, 1 })[0] << '\n';
+			<< ',' << net.feedForward({ 1, 1, 1 })[0]
+			<< '\n';
 #endif
 	}
 
@@ -201,8 +202,9 @@ int main() {
 
 	std::cout << "<\ntraining finished\n";
 
-	/*const char* stateFilename = "state.txt";	
-	std::ofstream state; state.open(stateFilename);
+	const char* stateFilename = "state.txt";
+
+	/*std::ofstream state; state.open(stateFilename);
 	state << net; std::cout << "NN state saved as: " << stateFilename << '\n';
 	state.close();*/
 
